@@ -1,0 +1,22 @@
+{
+  "name": "sosein",
+  "version": "0.1.7",
+  "description": "Collaborate with production Sosein Markdown artifacts through the Sosein MCP server.",
+  "author": {
+    "name": "Sosein",
+    "url": "https://sosein.ai"
+  },
+  "homepage": "https://sosein.ai",
+  "repository": "https://github.com/soseinai/sosein-plugins",
+  "license": "Proprietary",
+  "keywords": [
+    "sosein",
+    "documents",
+    "markdown",
+    "notes",
+    "collaboration",
+    "mcp",
+    "oauth"
+  ],
+  "mcpServers": "./.mcp.json"
+}

@@ -1,0 +1,43 @@
+name: Validate plugins
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  manifests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate JSON syntax
+        run: |
+          python3 -m json.tool .agents/plugins/marketplace.json >/dev/null
+          python3 -m json.tool .claude-plugin/marketplace.json >/dev/null
+          python3 -m json.tool plugins/sosein/.codex-plugin/plugin.json >/dev/null
+          python3 -m json.tool plugins/sosein/.claude-plugin/plugin.json >/dev/null
+          python3 -m json.tool plugins/sosein/.mcp.json >/dev/null
+      - name: Check marketplace and plugin identity
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path(".")
+          codex_market = json.loads((root / ".agents/plugins/marketplace.json").read_text())
+          claude_market = json.loads((root / ".claude-plugin/marketplace.json").read_text())
+          codex_plugin = json.loads((root / "plugins/sosein/.codex-plugin/plugin.json").read_text())
+          claude_plugin = json.loads((root / "plugins/sosein/.claude-plugin/plugin.json").read_text())
+
+          assert codex_market["name"] == "sosein"
+          assert claude_market["name"] == "sosein"
+          assert [entry["name"] for entry in codex_market["plugins"]] == ["sosein"]
+          assert [entry["name"] for entry in claude_market["plugins"]] == ["sosein"]
+          assert codex_plugin["name"] == "sosein"
+          assert claude_plugin["name"] == "sosein"
+          assert codex_plugin["version"] == claude_plugin["version"]
+          PY

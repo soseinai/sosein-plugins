@@ -1,0 +1,44 @@
+{
+  "name": "sosein",
+  "version": "0.1.7",
+  "description": "Collaborate with production Sosein Markdown artifacts from Codex through the Sosein MCP server.",
+  "author": {
+    "name": "Sosein",
+    "url": "https://sosein.ai"
+  },
+  "homepage": "https://sosein.ai",
+  "repository": "https://github.com/soseinai/sosein-plugins",
+  "license": "Proprietary",
+  "keywords": [
+    "sosein",
+    "documents",
+    "markdown",
+    "notes",
+    "collaboration",
+    "mcp",
+    "oauth"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Sosein",
+    "shortDescription": "Collaborate on Sosein artifacts from Codex",
+    "longDescription": "Connect Codex to production Sosein through OAuth-backed MCP so agents can inspect delegated profile context, search and read Markdown artifacts, find text in known artifacts, read heading outlines, create documents or notes, and edit existing artifacts with sequence-checked structured exact-text and section operations using access delegated from the signed-in human user.",
+    "developerName": "Sosein",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://sosein.ai",
+    "defaultPrompt": [
+      "Search my Sosein artifacts",
+      "Read a Sosein artifact",
+      "Create a Sosein note"
+    ],
+    "brandColor": "#111111",
+    "composerIcon": "./assets/composer-icon.svg",
+    "logo": "./assets/logo.svg"
+  },
+  "mcpServers": "./.mcp.json"
+}

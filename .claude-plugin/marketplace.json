@@ -1,0 +1,15 @@
+{
+  "name": "sosein",
+  "description": "Official Sosein plugins for collaborating with shared Markdown artifacts.",
+  "owner": {
+    "name": "Sosein",
+    "url": "https://sosein.ai"
+  },
+  "plugins": [
+    {
+      "name": "sosein",
+      "source": "./plugins/sosein",
+      "description": "Collaborate with production Sosein Markdown artifacts through the Sosein MCP server."
+    }
+  ]
+}
