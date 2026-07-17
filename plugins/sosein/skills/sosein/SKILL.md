@@ -1,146 +1,120 @@
 ---
 name: sosein
-description: Use when the user wants the agent to search, read, find in, outline, create, edit, or reason over Sosein's production artifacts through the Sosein MCP plugin.
+description: Use when the user wants to search, read, compare, find in, outline, create, edit, or reason over Sosein's production artifacts or their structured objects through the Sosein MCP plugin.
 ---
 
 # Sosein
 
-Use the Sosein MCP tools when the user asks about documents, notes, drafts,
-workspaces, or search results stored in Sosein.
+Use the Sosein MCP tools for production data at `https://app.sosein.ai/mcp`.
+Use Sosein Staging only when the user explicitly asks for staging, testing, or
+non-production data.
 
-The plugin connects to production at `https://app.sosein.ai/mcp`.
+The connection uses OAuth. Access and available tools reflect permissions
+delegated by the signed-in user. If access is missing, ask the user to connect
+or re-authorize the plugin; never request bearer tokens.
 
-The MCP connection authenticates with OAuth. Treat the connected MCP actor as an
-agent identity whose access is delegated from the signed-in human user. If access
-is missing, ask the user to connect or re-authorize the plugin rather than
-requesting bearer tokens.
+## Core Rules
 
-## Tool Choice
+- Get `account_id` from `sosein_profile` when the user, prior results, or current
+  context do not identify it. Use the requested workspace when several exist.
+- Prefer the narrowest tool and smallest read that completes the task. Preserve
+  `artifact_session_id` across calls for the same artifact when returned.
+- Treat search, find, and outline results as discovery metadata. Read the
+  artifact or object before relying on its current content or writing to it.
+- For every mutation, generate a valid caller-stable UUIDv7 `request_id`. Reuse
+  it only for an exact retry (including committing an unchanged dry run); use a
+  new UUIDv7 whenever the payload changes or for an independent mutation.
+- Prefer artifact resource links returned by MCP tools when referencing results.
+- Use tool calls for discovery. MCP resource listing is scoped to a known
+  account and artifact; it is not a browsable artifact catalog.
+- Separate facts read from Sosein from your own inference.
 
-Prefer the narrowest tool that answers the request:
+## Tool Routing
 
-- `sosein_profile`: confirm delegated owner, agent, scopes, accounts, and
-  workspace context. Use this first when identity or permissions matter.
-- `sosein_search_artifacts`: find artifacts by title, topic, phrase, question,
-  recency, type, account, or workspace. It requires `account_id`; get that from
-  `sosein_profile` when it is not already known. Pass `type: "document"` or
-  `type: "note"` when the request is type-specific.
-- `sosein_read_artifact`: read a known artifact id or URI.
-- `sosein_read_object`: read full canonical data for a projected object marker
-  such as `read_object(o:00000001)`.
-- `sosein_edit_object`: mutate one referenced object with structured operations
-  against `n:` node ids returned by `sosein_read_object`. Use this for object
-  data edits; `sosein_write_object` is not part of the current tool surface.
-- `sosein_find_in_artifact`: find literal text or regex inside a known artifact.
-  Use for discovery when target text might be ambiguous or when line/heading
-  context helps locate the target; do not use find output as an edit anchor.
-- `sosein_outline_document`: get heading paths and section ranges. Use
-  for discovery before heading-scoped edits; do not use outline output as an
-  edit anchor.
-- `sosein_create_artifact`: create a new artifact. Pass `type:
-  "document"` or `type: "note"`; omit it only when a document is intended.
-- `sosein_edit_artifact`: change an existing artifact with anchored fragments
-  built from a fresh `sosein_read_artifact` projection.
+- `sosein_profile`: inspect delegated identity, scopes, accounts, and workspaces.
+- `sosein_search_artifacts`: discover artifacts by query, type, time, or
+  workspace. Keep `verbosity: "compact"` unless full ranking evidence or search
+  diagnostics are needed. Search can return documents, notes, and events.
+- `sosein_read_artifact`: read one known artifact. Use `scope` with a `b:`
+  heading id or `o:` object id when only one subtree is needed.
+- `sosein_read_artifacts`: read 1–10 known artifacts from the same account in
+  one call. Handle per-item errors; use scoped single reads for large artifacts.
+- `sosein_find_in_artifact`: locate literal text or regex in a known artifact.
+- `sosein_outline_document`: discover headings and `b:` section ids.
+- `sosein_outline_artifact_objects`: discover object references and their
+  surrounding section. Use `sosein_read_object` for their actual data.
+- `sosein_read_object`: read one `o:` object and its `n:` node ids,
+  `object_type`, `schema_version`, values, and edit preconditions.
+- `sosein_list_object_types` then `sosein_get_object_schema`: discover the
+  supported object contract; never infer it from projected text.
+- `sosein_create_artifact`: create a document or note.
+- `sosein_create_object`: create a schema-valid object and insert its reference
+  into an existing artifact atomically.
+- `sosein_edit_artifact`: edit prose with projection-versioned exact fragments.
+- `sosein_edit_object`: edit structured object data with node-level operations.
 
-Prefer MCP resource links returned by search/read/create/edit tool calls when present.
-List resources only after a specific artifact id or URI is known.
+## Read Workflow
 
-## Find And Outline
+1. Resolve the account with `sosein_profile` if necessary.
+2. Search only when the artifact id or URI is unknown. Use filters instead of
+   broad queries when the request supplies type, date, or workspace context.
+3. Read selected results to confirm content and access. Search freshness reports
+   index state, not whether the artifact is currently readable.
+4. For a large known artifact, outline or find first, then use the returned `b:`
+   id in a scoped read. For embedded object data, outline objects or use a known
+   `o:` id, then call `sosein_read_object`.
 
-`sosein_find_in_artifact` defaults to literal, case-sensitive search with 2
-context lines and 20 matches. Use `mode: "regex"` only when literal matching is
-not enough. Use `case_sensitive: false` intentionally; do not hide casing
-differences when the edit itself needs exact projected content.
+## Artifact Writes
 
-Find results return line ranges, byte ranges, heading paths, and surrounding
-context. Use those to choose exact anchors, but remember that
-`sosein_edit_artifact` does not accept byte offsets. Before editing, re-read the
-artifact and build fragments from the returned projection.
+Create with `sosein_create_artifact`, an `account_id`, title, UUIDv7
+`request_id`, optional initial content, and explicit `type` when a note is
+intended. Events are readable/searchable but are not created or edited here.
 
-## Existing Artifact Edits
+For an existing artifact:
 
-Do not use unified diffs or full-document replacement for existing artifacts.
-Use `sosein_edit_artifact` with anchored fragments against the latest committed
-projection.
+1. Read the latest projection and retain its `artifact_session_id` and
+   `head.projection_version`.
+2. If needed, find or outline the target, then read the exact section again.
+   Find/outline output is not an edit anchor.
+3. Build `sosein_edit_artifact.fragments` from the projection just read. Each
+   `old` value must match exactly and uniquely; `new` is the replacement
+   (`""` deletes). Add a `b:` or `o:` `scope` when uniqueness needs narrowing.
+4. Use `dry_run: true` for multi-fragment, section-wide, or otherwise risky
+   edits. Inspect the preview, then commit unchanged with the same request id;
+   use a new request id if the payload changes.
+5. Re-read after commit when confirmation or subsequent reasoning depends on
+   the final state.
 
-Workflow:
+Never use unified diffs or whole-artifact replacement for an existing artifact.
+Manage newlines explicitly. Do not create or copy projected object references
+with text fragments; use `sosein_create_object`.
 
-1. Locate the artifact with search if needed.
-2. Read the latest head with `sosein_read_artifact`.
-3. Keep `artifact_session_id` from the response when present and pass
-   `head.projection_version` as `projection_version`.
-4. Narrow the target with `sosein_find_in_artifact` or
-   `sosein_outline_document` when the edit target is not obviously unique, then
-   re-read before constructing the write.
-5. Build anchored fragments against exactly the projection you read.
-6. Use `dry_run: true` for multi-edit, section, or high-risk changes; inspect the
-   preview before committing.
-7. Commit with `dry_run` omitted or false. Re-read after commit when the user
-   needs confirmation or when the follow-up answer depends on the final text.
+## Object Writes
 
-Fragment targeting:
+To create an object:
 
-- `old` is exact projected content that must still match uniquely.
-- `new` is the replacement content; use `new: ""` to delete `old`.
-- `scope` is optional. Use a `b:` heading id or `o:` object id from the read
-  projection when the same text appears more than once.
-- Prefer a longer exact `old` with surrounding projected content over relying on a very
-  short fragment.
-- Manage newlines explicitly in `new`. The server inserts exactly what you send.
+1. Call `sosein_list_object_types`, then `sosein_get_object_schema` for the
+   chosen type and version.
+2. Read the destination artifact and choose a placement: a unique text anchor
+   or a start/end boundary, optionally scoped by `b:` or `o:` id.
+3. Call `sosein_create_object` with schema-valid fields, the read projection
+   version/session, placement, title, and a fresh UUIDv7 request id.
 
-Compact edit payload shape:
+To edit an object, call `sosein_read_object`, then `sosein_edit_object` with its
+exact `object_type`, `schema_version`, and current `n:` ids, values, and hashes.
+Use the structured `add_field`, `update_field`, `remove_field`, `insert`,
+`delete`, or `move` operation described by the tool schema; never replace the
+whole object. Preserve collections' object-only shape and let Sosein allocate
+new node ids. Never assume a type, version, field, or value even if familiar;
+derive them from the catalog, schema, fresh read, and user's stated intent, and
+ask when required intent is missing.
 
-```json
-{
-  "artifact_id": "<uuid>",
-  "artifact_session_id": "<uuid from read response when present>",
-  "projection_version": 3,
-  "dry_run": true,
-  "fragments": [
-    {
-      "old": "exact content from the read projection",
-      "new": "replacement content",
-      "scope": "b:00000001"
-    }
-  ]
-}
-```
+## Recovery
 
-## Existing Object Edits
-
-Do not replace whole object records. For projected object data, read the object
-with `sosein_read_object`, then call `sosein_edit_object` with
-`object_type`, `schema_version`, a stable `request_id`, and structured ops.
-
-Use ids and preconditions directly from the read response:
-
-- `add_field`: creates one absent field on an existing node. Collection fields
-  must be created as `[]`; populate them with `insert`.
-- `update_field`: changes one scalar field only. Use the current scalar value as
-  `expect`.
-- `remove_field`: removes one field. Include the current value as `expect`; for
-  object-valued fields, include that value's `__id`. Non-empty collections must
-  be emptied with `delete` before the field itself can be removed.
-- `insert`: adds one object node to a collection. The server strips incoming
-  `__id` values and mints fresh ids for the inserted node and nested nodes.
-  Arrays in literate objects may contain only objects, so wrap primitive array
-  values in object nodes with a `value` field unless the schema defines a more
-  specific field, for example `{ "value": "red" }`.
-- `delete`: removes one collection node by `id`, `parent`, `field`, and the
-  node's `expect_hash` from `sosein_read_object.nodes`.
-- `move`: relocates one collection node while preserving its `n:` id. Use
-  `from`, `from_field`, `into`, `field`, and optional `before` ids from the read.
-
-When an object edit is rejected as stale, read the object again and regenerate
-ops against the current node ids, hashes, and field values.
-
-## Failure Handling
-
-When an edit fails because the artifact is stale, do not retry the same fragment
-payload. If the tool reports a projection version conflict, exact text matched
-zero times, exact text matched multiple times, an invalid scope, or overlapping
-fragments, read the latest head again, regenerate or rebase the fragments
-against the new projection, explain the conflict if it affects the user-visible
-edit, and submit the new fragments with the new `head.projection_version`.
-
-When summarizing artifact content, distinguish direct artifact facts from your own inference.
+- On stale projection, missing/multiple anchor, invalid scope, overlap, or stale
+  object precondition: re-read, rebuild the write against current ids and
+  values, and use a fresh request id because the payload changed.
+- On `request_id_conflict`: retry with the old id only if the payload is
+  identical; otherwise generate a fresh UUIDv7.
+- On missing scope/tool/permission: inspect `sosein_profile`, then ask the user
+  to re-authorize when the requested capability is not delegated.
