@@ -4,7 +4,7 @@ Official plugins for connecting Codex and Claude Code to Sosein production and
 staging environments.
 
 The `sosein` plugin connects agents to the production Sosein MCP server. It
-supports OAuth sign-in and lets an agent search, read, create, and edit Markdown
+supports OAuth sign-in and lets an agent search, read, create, and edit Sosein's
 artifacts using the signed-in user's existing Sosein permissions.
 
 ## Install in Codex
@@ -60,7 +60,7 @@ claude plugin update sosein@sosein
 The plugin can:
 
 - inspect the delegated Sosein profile and account context;
-- search and read Markdown documents and notes;
+- search and read Sosein's artifacts;
 - find text and inspect document outlines;
 - create documents and notes; and
 - edit existing artifacts with sequence-checked structured operations.

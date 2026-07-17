@@ -3,7 +3,7 @@
     "sosein": {
       "type": "http",
       "url": "https://app.sosein.ai/mcp",
-      "note": "Sosein production Markdown artifact collaboration MCP server. Uses OAuth with PKCE on first connection; MCP agent access is delegated from the signed-in human user's current Sosein permissions. Exposes profile, search, read, find, outline, create, and structured edit tools for Markdown documents and notes."
+      "note": "Sosein production artifact collaboration MCP server. Uses OAuth with PKCE on first connection; MCP agent access is delegated from the signed-in human user's current Sosein permissions. Exposes profile, search, read, find, outline, create, and structured edit tools for Sosein's artifacts."
     }
   }
 }

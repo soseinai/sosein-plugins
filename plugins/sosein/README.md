@@ -23,12 +23,12 @@ or note creation, and anchored edits:
 | --- | --- |
 | Confirm delegated identity, account, workspace, or scopes | `sosein_profile` |
 | Find an artifact by title, topic, phrase, recency, or type in a known account | `sosein_search_artifacts` |
-| Read the latest committed Markdown head | `sosein_read_artifact` |
+| Read the latest committed artifact head | `sosein_read_artifact` |
 | Read full data for a projected object marker | `sosein_read_object` |
 | Mutate a referenced object with structured operations | `sosein_edit_object` |
 | Locate exact text or regex matches inside a known artifact | `sosein_find_in_artifact` |
-| Get Markdown heading paths and section ranges | `sosein_outline_document` |
-| Create a new Markdown document or note | `sosein_create_artifact` |
+| Get heading paths and section ranges | `sosein_outline_document` |
+| Create a new document or note | `sosein_create_artifact` |
 | Change an existing artifact | `sosein_edit_artifact` |
 
 Search requires an `account_id`; agents should get that from `sosein_profile`
@@ -43,8 +43,8 @@ Existing-artifact writes use `sosein_edit_artifact`, not unified diffs and not
 full-document replacement. The tool accepts projection-versioned anchored
 fragments:
 
-- `old`: exact projected Markdown that must still match uniquely.
-- `new`: replacement Markdown; use an empty string to delete `old`.
+- `old`: exact projected content that must still match uniquely.
+- `new`: replacement content; use an empty string to delete `old`.
 - `scope`: optional `b:` heading id or `o:` object id that narrows matching.
 
 Agents should read the latest committed projection first and pass

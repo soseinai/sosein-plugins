@@ -1,7 +1,7 @@
 {
   "name": "sosein-staging",
-  "version": "0.1.9",
-  "description": "Collaborate with Sosein Staging Markdown artifacts through the staging Sosein MCP server.",
+  "version": "0.1.10",
+  "description": "Collaborate with Sosein's staging artifacts through the staging Sosein MCP server.",
   "author": {
     "name": "Sosein",
     "url": "https://sosein.ai"
@@ -12,7 +12,7 @@
   "keywords": [
     "sosein",
     "documents",
-    "markdown",
+    "artifacts",
     "notes",
     "collaboration",
     "mcp",

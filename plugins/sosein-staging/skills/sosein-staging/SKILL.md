@@ -1,6 +1,6 @@
 ---
 name: sosein-staging
-description: Use when the user explicitly asks the agent to search, read, find in, outline, create, edit, or reason over Sosein Staging or non-production Sosein Markdown artifacts through the Sosein Staging MCP plugin.
+description: Use when the user explicitly asks the agent to search, read, find in, outline, create, edit, or reason over Sosein's staging or non-production artifacts through the Sosein Staging MCP plugin.
 ---
 
 # Sosein Staging
@@ -36,10 +36,10 @@ Prefer the narrowest tool that answers the request:
 - `sosein_find_in_artifact`: find literal text or regex inside a known artifact.
   Use for discovery when target text might be ambiguous or when line/heading
   context helps locate the target; do not use find output as an edit anchor.
-- `sosein_outline_document`: get Markdown heading paths and section ranges. Use
+- `sosein_outline_document`: get heading paths and section ranges. Use
   for discovery before heading-scoped edits; do not use outline output as an
   edit anchor.
-- `sosein_create_artifact`: create a new Markdown artifact. Pass `type:
+- `sosein_create_artifact`: create a new artifact. Pass `type:
   "document"` or `type: "note"`; omit it only when a document is intended.
 - `sosein_edit_artifact`: change an existing artifact with anchored fragments
   built from a fresh `sosein_read_artifact` projection.
@@ -52,7 +52,7 @@ List resources only after a specific artifact id or URI is known.
 `sosein_find_in_artifact` defaults to literal, case-sensitive search with 2
 context lines and 20 matches. Use `mode: "regex"` only when literal matching is
 not enough. Use `case_sensitive: false` intentionally; do not hide casing
-differences when the edit itself needs exact Markdown.
+differences when the edit itself needs exact projected content.
 
 Find results return line ranges, byte ranges, heading paths, and surrounding
 context. Use those to choose exact anchors, but remember that
@@ -82,11 +82,11 @@ Workflow:
 
 Fragment targeting:
 
-- `old` is exact projected Markdown that must still match uniquely.
-- `new` is the replacement Markdown; use `new: ""` to delete `old`.
+- `old` is exact projected content that must still match uniquely.
+- `new` is the replacement content; use `new: ""` to delete `old`.
 - `scope` is optional. Use a `b:` heading id or `o:` object id from the read
   projection when the same text appears more than once.
-- Prefer a longer exact `old` with surrounding Markdown over relying on a very
+- Prefer a longer exact `old` with surrounding projected content over relying on a very
   short fragment.
 - Manage newlines explicitly in `new`. The server inserts exactly what you send.
 
@@ -100,8 +100,8 @@ Compact edit payload shape:
   "dry_run": true,
   "fragments": [
     {
-      "old": "exact Markdown from the read projection",
-      "new": "replacement Markdown",
+      "old": "exact content from the read projection",
+      "new": "replacement content",
       "scope": "b:00000001"
     }
   ]

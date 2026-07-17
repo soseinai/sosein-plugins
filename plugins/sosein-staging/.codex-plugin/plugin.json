@@ -1,7 +1,7 @@
 {
   "name": "sosein-staging",
-  "version": "0.1.9",
-  "description": "Collaborate with Sosein Staging Markdown artifacts from Codex through the staging Sosein MCP server.",
+  "version": "0.1.10",
+  "description": "Collaborate with Sosein's staging artifacts from Codex through the staging Sosein MCP server.",
   "author": {
     "name": "Sosein",
     "url": "https://sosein.ai"
@@ -12,7 +12,7 @@
   "keywords": [
     "sosein",
     "documents",
-    "markdown",
+    "artifacts",
     "notes",
     "collaboration",
     "mcp",
@@ -22,7 +22,7 @@
   "interface": {
     "displayName": "Sosein Staging",
     "shortDescription": "Collaborate on Sosein staging artifacts from Codex",
-    "longDescription": "Connect Codex to Sosein Staging through OAuth-backed MCP so agents can inspect delegated profile context, search and read Markdown artifacts, find text in known artifacts, read heading outlines, create documents or notes, and edit existing artifacts with sequence-checked structured exact-text and section operations using access delegated from the signed-in human user.",
+    "longDescription": "Connect Codex to Sosein Staging through OAuth-backed MCP so agents can inspect delegated profile context, search and read Sosein's artifacts, find text in known artifacts, read outlines, create documents or notes, and edit existing artifacts with sequence-checked structured exact-text and section operations using access delegated from the signed-in human user.",
     "developerName": "Sosein",
     "category": "Productivity",
     "capabilities": [
