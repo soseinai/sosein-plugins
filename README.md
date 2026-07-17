@@ -1,6 +1,7 @@
 # Sosein Plugins
 
-Official plugins for connecting Codex and Claude Code to Sosein.
+Official plugins for connecting Codex and Claude Code to Sosein production and
+staging environments.
 
 The `sosein` plugin connects agents to the production Sosein MCP server. It
 supports OAuth sign-in and lets an agent search, read, create, and edit Markdown
@@ -11,6 +12,13 @@ artifacts using the signed-in user's existing Sosein permissions.
 ```sh
 codex plugin marketplace add soseinai/sosein-plugins
 codex plugin add sosein@sosein
+```
+
+Install the staging plugin when you explicitly want to work with non-production
+Sosein data:
+
+```sh
+codex plugin add sosein-staging@sosein
 ```
 
 Start a new Codex task after installation. Sosein will ask you to sign in when
@@ -28,6 +36,13 @@ codex plugin add sosein@sosein
 ```sh
 claude plugin marketplace add soseinai/sosein-plugins
 claude plugin install sosein@sosein
+```
+
+Install the staging plugin when you explicitly want to work with non-production
+Sosein data:
+
+```sh
+claude plugin install sosein-staging@sosein
 ```
 
 Run `/reload-plugins` or restart Claude Code after installation. Sosein will ask
@@ -50,17 +65,18 @@ The plugin can:
 - create documents and notes; and
 - edit existing artifacts with sequence-checked structured operations.
 
-The MCP identity is delegated from the signed-in human user. Installing the
-plugin does not grant access to artifacts the user cannot already access in
-Sosein.
+Each MCP identity is delegated from the signed-in human user in its respective
+environment. Installing either plugin does not grant access to artifacts the
+user cannot already access in that Sosein environment.
 
 See [`plugins/sosein/README.md`](plugins/sosein/README.md) for the complete agent
 surface and editing contract.
 
 ## Repository contents
 
-This public repository intentionally contains only the production Sosein
-plugin. Internal staging and engineering plugins are not distributed here.
+This public repository contains the production and staging Sosein plugins. The
+staging plugin is intended only for explicit testing and non-production work.
+Internal engineering plugins are not distributed here.
 
 Sosein is proprietary software. The plugin package is published here for use
 with Codex and Claude Code; no additional license is granted beyond that use.

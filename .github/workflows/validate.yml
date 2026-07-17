@@ -21,6 +21,9 @@ jobs:
           python3 -m json.tool plugins/sosein/.codex-plugin/plugin.json >/dev/null
           python3 -m json.tool plugins/sosein/.claude-plugin/plugin.json >/dev/null
           python3 -m json.tool plugins/sosein/.mcp.json >/dev/null
+          python3 -m json.tool plugins/sosein-staging/.codex-plugin/plugin.json >/dev/null
+          python3 -m json.tool plugins/sosein-staging/.claude-plugin/plugin.json >/dev/null
+          python3 -m json.tool plugins/sosein-staging/.mcp.json >/dev/null
       - name: Check marketplace and plugin identity
         run: |
           python3 - <<'PY'
@@ -32,12 +35,18 @@ jobs:
           claude_market = json.loads((root / ".claude-plugin/marketplace.json").read_text())
           codex_plugin = json.loads((root / "plugins/sosein/.codex-plugin/plugin.json").read_text())
           claude_plugin = json.loads((root / "plugins/sosein/.claude-plugin/plugin.json").read_text())
+          codex_staging_plugin = json.loads((root / "plugins/sosein-staging/.codex-plugin/plugin.json").read_text())
+          claude_staging_plugin = json.loads((root / "plugins/sosein-staging/.claude-plugin/plugin.json").read_text())
 
           assert codex_market["name"] == "sosein"
           assert claude_market["name"] == "sosein"
-          assert [entry["name"] for entry in codex_market["plugins"]] == ["sosein"]
-          assert [entry["name"] for entry in claude_market["plugins"]] == ["sosein"]
+          assert [entry["name"] for entry in codex_market["plugins"]] == ["sosein", "sosein-staging"]
+          assert [entry["name"] for entry in claude_market["plugins"]] == ["sosein", "sosein-staging"]
           assert codex_plugin["name"] == "sosein"
           assert claude_plugin["name"] == "sosein"
+          assert codex_staging_plugin["name"] == "sosein-staging"
+          assert claude_staging_plugin["name"] == "sosein-staging"
           assert codex_plugin["version"] == claude_plugin["version"]
+          assert codex_staging_plugin["version"] == claude_staging_plugin["version"]
+          assert codex_plugin["version"] == codex_staging_plugin["version"]
           PY

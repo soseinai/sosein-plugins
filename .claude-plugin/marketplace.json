@@ -10,6 +10,11 @@
       "name": "sosein",
       "source": "./plugins/sosein",
       "description": "Collaborate with production Sosein Markdown artifacts through the Sosein MCP server."
+    },
+    {
+      "name": "sosein-staging",
+      "source": "./plugins/sosein-staging",
+      "description": "Collaborate with Sosein Staging Markdown artifacts through the staging Sosein MCP server."
     }
   ]
 }
