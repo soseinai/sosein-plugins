@@ -59,11 +59,13 @@ claude plugin update sosein@sosein
 
 The plugin can:
 
-- inspect the delegated Sosein profile and account context;
-- search and read Sosein's artifacts;
-- find text and inspect document outlines;
-- create documents and notes; and
-- edit existing artifacts with sequence-checked structured operations.
+- inspect the delegated profile, account context, and workspace destinations;
+- search documents, notes, records, and events;
+- read artifacts, selected blocks, and structured objects;
+- create documents, notes, or records privately or in a workspace, from native
+  agent Markdown or source Markdown;
+- edit text, block structure, and object fields with current-content checks; and
+- read and create reviews, comments, and suggestions.
 
 Each MCP identity is delegated from the signed-in human user in its respective
 environment. Installing either plugin does not grant access to artifacts the
@@ -71,6 +73,19 @@ user cannot already access in that Sosein environment.
 
 See [`plugins/sosein/README.md`](plugins/sosein/README.md) for the complete agent
 surface and editing contract.
+
+## Maintaining MCP Alignment
+
+The plugin guidance is aligned with the 26-tool catalog in Sosein Cloud commit
+`82fb2e66c` (2026-09-02), including the format-v5 block surface. This is a
+source-contract baseline, not a claim that both hosted environments have
+deployed that revision. The connected server's tool schemas and delegated
+scopes determine what is available.
+
+When the server changes, compare its `src/mcp/mod.rs` tool definitions and
+`src/mcp/tools/reviews/mod.rs` definitions in the Cloud server crate with both
+plugins' skills and README tables. Keep the two workflows identical except for
+environment routing. Update both Codex and Claude package versions together.
 
 ## Repository contents
 

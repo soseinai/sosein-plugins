@@ -1,6 +1,6 @@
 {
   "name": "sosein",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "Collaborate with Sosein's production artifacts from Codex through the Sosein MCP server.",
   "author": {
     "name": "Sosein",
@@ -22,7 +22,7 @@
   "interface": {
     "displayName": "Sosein",
     "shortDescription": "Collaborate on Sosein artifacts from Codex",
-    "longDescription": "Connect Codex to production Sosein through OAuth-backed MCP so agents can inspect delegated profile context, search and read Sosein's artifacts, find text in known artifacts, read outlines, create documents or notes, and edit existing artifacts with sequence-checked structured exact-text and section operations using access delegated from the signed-in human user.",
+    "longDescription": "Connect Codex to production Sosein through OAuth-backed MCP. Search and read artifacts, create documents, notes, or records privately or in a workspace, work with structured objects, make block-checked edits, and collaborate through reviews, comments, and suggestions using access delegated from the signed-in user.",
     "developerName": "Sosein",
     "category": "Productivity",
     "capabilities": [
