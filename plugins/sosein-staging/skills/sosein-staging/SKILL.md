@@ -1,6 +1,6 @@
 ---
 name: sosein-staging
-description: Use when the user explicitly wants to search, read, compare, create, edit, or review Sosein's staging or non-production artifacts, structured objects, or annotation threads through the Sosein Staging MCP plugin.
+description: Use when the user explicitly wants to search, read, compare, find in, outline, create, edit, or review Sosein's staging or non-production artifacts, structured objects, or annotation threads through the Sosein Staging MCP plugin.
 ---
 
 # Sosein Staging

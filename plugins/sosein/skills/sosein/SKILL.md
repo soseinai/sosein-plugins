@@ -1,6 +1,6 @@
 ---
 name: sosein
-description: Use when the user wants to search, read, compare, create, edit, or review Sosein's production artifacts, structured objects, or annotation threads through the Sosein MCP plugin.
+description: Use when the user wants to search, read, compare, find in, outline, create, edit, or review Sosein's production artifacts, structured objects, or annotation threads through the Sosein MCP plugin.
 ---
 
 # Sosein
