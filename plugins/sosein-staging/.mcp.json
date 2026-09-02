@@ -3,7 +3,7 @@
     "sosein-staging": {
       "type": "http",
       "url": "https://app.staging.sosein.ai/mcp",
-      "note": "Sosein Staging artifact collaboration MCP server. Uses OAuth with PKCE on first connection; MCP agent access is delegated from the signed-in human user's current Sosein Staging permissions. Exposes the same profile, search, read, find, outline, create, and structured edit tools against staging data."
+      "note": "Sosein Staging artifact collaboration MCP server. Uses OAuth with PKCE; access is delegated from the signed-in user's staging permissions. Tools cover profile and workspaces, artifact search and addressed reads, native and source-Markdown creation, block and object edits, reviews, comments, and suggestions."
     }
   }
 }
