@@ -52,7 +52,7 @@ or re-authorize the plugin; never request bearer tokens.
   supported object types, versions, classes, and field schemas.
 - `sosein_create_artifact`: create from native agent-dialect Markdown.
 - `sosein_create_from_markdown`: create from inline source Markdown, including
-  Mermaid diagrams.
+  Mermaid diagrams. See Math and Diagrams below.
 - `sosein_create_object`: create and place a schema-valid object atomically.
 - `sosein_edit_artifact`: edit prose with exact `old`/`new` fragments.
 - `sosein_edit_blocks`: insert, replace, move, remove, or set block attributes.
@@ -124,6 +124,29 @@ Use `sosein_create_from_markdown.source_markdown` for non-empty source Markdown
 or Mermaid. This is synchronous inline creation, not a file-upload or conversion
 job tool. Both tools accept optional `external_uri` for a caller-owned canonical
 identity; do not invent one or use the reserved `sosein-ext` scheme.
+
+## Math and Diagrams
+
+Math is a spelling, not a tool. Write display math as a `$$` fence with each
+delimiter alone on its own line, and inline math as `$…$`, with KaTeX LaTeX
+inside. Both work in `markdown_content`, `source_markdown`, edit fragments,
+and block payloads, and read back exactly as written. Nothing validates the
+LaTeX on write; the Doc app renders an unparseable formula in an error colour,
+so keep to standard KaTeX syntax. A `$` inside inline math ends the formula,
+and an inline source must not end in a backslash.
+
+A diagram is a `sosein/diagram` Literate Object, never a code block:
+
+- New artifact: a ```` ```mermaid ```` fence in `source_markdown` becomes a
+  placed diagram object at birth. `markdown_content` refuses the fence.
+- Existing artifact: `sosein_create_object` with `object_type:
+  "sosein/diagram"`, `fields: {"dialect": "mermaid", "source": "…"}`, and a
+  block-class placement whose label is the diagram's short name. Change the
+  picture with `sosein_edit_object` on `source`. A mermaid fence in
+  `sosein_edit_artifact` or `sosein_edit_blocks` is refused.
+- The renderer is strict: no click or callback lines, no HTML in labels, no
+  theme directives. Load the `mermaid` skill for diagram-type choice and
+  syntax.
 
 ## Object Writes
 

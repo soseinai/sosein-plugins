@@ -85,8 +85,14 @@ object reference. Suggestions propose a change, deletion, or insertion without
 changing the artifact. There is no MCP tool to accept a suggestion; resolving
 an annotation is not acceptance. Rejection is terminal.
 
-## Skill
+## Skills
 
 The bundled skill contains the detailed workflow, placement forms, review
 anchors, retry rules, and error recovery. It also keeps production and staging
 requests separate.
+
+The bundled `mermaid` skill is the diagram authoring guide: which Mermaid
+diagram type answers which question, the syntax Sosein's strict renderer
+accepts, and how a diagram is placed as a `sosein/diagram` object through the
+MCP tools. Math needs no skill: `$$` display fences and `$…$` inline spans are
+ordinary content on every create and edit path.
