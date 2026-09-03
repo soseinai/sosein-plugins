@@ -42,6 +42,9 @@ and a locked theme. Write for that:
   `themeCSS`, `securityLevel`, `htmlLabels`, or `maxEdges`. They are ignored.
   The document supplies the palette, so the diagram matches light and dark
   mode without any theme work.
+- No image nodes (`A@{ img: "https://…" }`) and no `url(…)` in `classDef` or
+  `style` lines. The client refuses the whole source before Mermaid loads,
+  because both would fetch from a host the diagram names.
 - Stay under 50,000 characters of source and 500 edges. Larger sources are a
   parse error.
 

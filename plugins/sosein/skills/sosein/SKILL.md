@@ -131,8 +131,10 @@ delimiter alone on its own line, and inline math as `$…$`, with KaTeX LaTeX
 inside. Both work in `markdown_content`, `source_markdown`, edit fragments,
 and block payloads, and read back exactly as written. Nothing validates the
 LaTeX on write; the Doc app renders an unparseable formula in an error colour,
-so keep to standard KaTeX syntax. A `$` inside inline math ends the formula,
-and an inline source must not end in a backslash.
+so keep to standard KaTeX syntax. Inline math has grammar limits: an inline
+source that is empty, contains another `$`, ends in a backslash, or starts or
+ends with a digit against its delimiter dissolves into literal text (`$5$` is
+currency, not math). Use a `$$` block for anything that hits them.
 
 A diagram is a `sosein/diagram` Literate Object, never a code block:
 
@@ -144,8 +146,8 @@ A diagram is a `sosein/diagram` Literate Object, never a code block:
   picture with `sosein_edit_object` on `source`. A mermaid fence in
   `sosein_edit_artifact` or `sosein_edit_blocks` is refused.
 - The renderer is strict: no click or callback lines, no HTML in labels, no
-  theme directives. Load the `mermaid` skill for diagram-type choice and
-  syntax.
+  theme directives, no image nodes (`@{ img: … }`), no `url(…)` styles. Load
+  the `mermaid` skill for diagram-type choice and syntax.
 
 ## Object Writes
 
