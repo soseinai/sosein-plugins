@@ -70,7 +70,8 @@ flowchart TD
   or `-->|text|` for a label.
 - Quote any label that contains `(`, `)`, `[`, `]`, `{`, `}`, `|`, `#`, `;`,
   or a keyword: `A["Deploy (prod)"]`.
-- `end` is reserved. Do not use it as a bare node id; write `E[end]` or quote.
+- Lowercase `end` breaks the flowchart parser anywhere it appears, as a node
+  id or inside a label. Capitalise it instead: `E[End]` or `E[END]`.
 - Node ids are case-sensitive and must not contain spaces.
 
 ### Sequence diagram (interactions over time)
