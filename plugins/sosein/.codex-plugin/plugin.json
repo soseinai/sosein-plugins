@@ -37,7 +37,7 @@
       "Create a Sosein note"
     ],
     "brandColor": "#111111",
-    "composerIcon": "./assets/composer-icon.svg",
+    "composerIcon": "./assets/logo.svg",
     "logo": "./assets/logo.svg"
   },
   "mcpServers": "./.mcp.json"
