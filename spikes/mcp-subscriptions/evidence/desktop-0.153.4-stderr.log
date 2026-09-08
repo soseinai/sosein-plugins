@@ -1,0 +1,1 @@
+{"timestamp":"2026-09-08T00:51:40.984350Z","level":"INFO","fields":{"message":"MCP server resource updated (uri: spike://sosein/plan)"},"target":"codex_rmcp_client::logging_client_handler"}

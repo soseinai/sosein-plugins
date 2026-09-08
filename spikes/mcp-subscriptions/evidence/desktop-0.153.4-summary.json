@@ -1,0 +1,50 @@
+{
+  "binary_version": "codex-cli 0.153.4",
+  "methods": [
+    "initialize",
+    "notifications/initialized",
+    "tools/list",
+    "initialize",
+    "notifications/initialized",
+    "tools/list",
+    "resources/list",
+    "resources/templates/list",
+    "resources/read",
+    "resources/read"
+  ],
+  "first_read": {
+    "id": 3,
+    "result": {
+      "contents": [
+        {
+          "uri": "spike://sosein/plan",
+          "mimeType": "text/plain",
+          "text": "revision 1"
+        }
+      ],
+      "originCallId": null
+    }
+  },
+  "explicit_second_read": {
+    "id": 4,
+    "result": {
+      "contents": [
+        {
+          "uri": "spike://sosein/plan",
+          "mimeType": "text/plain",
+          "text": "revision 2"
+        }
+      ],
+      "originCallId": null
+    }
+  },
+  "app_server_notifications": [
+    "remoteControl/status/changed",
+    "thread/started",
+    "warning",
+    "mcpServer/startupStatus/updated",
+    "mcpServer/startupStatus/updated"
+  ],
+  "initialize_error": null,
+  "status_error": null
+}
