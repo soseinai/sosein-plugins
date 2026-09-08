@@ -147,8 +147,10 @@ A diagram is a `sosein/diagram` Literate Object, never a code block:
   picture with `sosein_edit_object` on `source`. A mermaid fence in
   `sosein_edit_artifact` or `sosein_edit_blocks` is refused.
 - The renderer is strict: no click or callback lines, no HTML in labels, no
-  theme directives, no image nodes (`@{ img: … }`), no `url(…)` styles. Load
-  the `mermaid` skill for diagram-type choice and syntax.
+  theme directives, no image nodes (`@{ img: … }`), no `url(…)` styles. Before authoring a diagram, including a new Markdown import, call
+  `sosein_get_object_schema` for `sosein/diagram` using its supported schema
+  version and read the returned `authoring_guidance` for diagram-type choice,
+  syntax, examples, and renderer restrictions.
 
 ## Object Writes
 
