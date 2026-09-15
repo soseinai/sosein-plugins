@@ -3,7 +3,7 @@
     "sosein": {
       "type": "http",
       "url": "https://app.sosein.ai/mcp",
-      "note": "Sosein production artifact collaboration MCP server. Uses OAuth with PKCE; access is delegated from the signed-in user's production permissions. Tools cover profile and workspaces, artifact search and addressed reads, native and source-Markdown creation, block and object edits, reviews, comments, and suggestions."
+      "note": "Sosein production artifact collaboration MCP server. Uses OAuth with PKCE; access is delegated from the signed-in user's production permissions. Tools cover profile and workspaces, memory recall with citations, artifact search and addressed reads, native and source-Markdown creation, block and object edits, reviews, comments, and suggestions."
     }
   }
 }

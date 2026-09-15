@@ -1,7 +1,7 @@
 {
   "name": "sosein",
-  "version": "0.1.13",
-  "description": "Collaborate with Sosein's production artifacts from Codex through the Sosein MCP server.",
+  "version": "0.1.14",
+  "description": "Recall memories and collaborate with Sosein's production artifacts from Codex through the Sosein MCP server.",
   "author": {
     "name": "Sosein",
     "url": "https://sosein.ai"
@@ -14,6 +14,7 @@
     "documents",
     "artifacts",
     "notes",
+    "memory",
     "collaboration",
     "mcp",
     "oauth"
@@ -21,8 +22,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Sosein",
-    "shortDescription": "Collaborate on Sosein artifacts from Codex",
-    "longDescription": "Connect Codex to production Sosein through OAuth-backed MCP. Search and read artifacts, create documents, notes, or records privately or in a workspace, work with structured objects, make block-checked edits, and collaborate through reviews, comments, and suggestions using access delegated from the signed-in user.",
+    "shortDescription": "Recall memories and collaborate on Sosein artifacts",
+    "longDescription": "Connect Codex to production Sosein through OAuth-backed MCP. Recall relevant memories with citations, search and read artifacts, create documents, notes, or records privately or in a workspace, work with structured objects, make block-checked edits, and collaborate through reviews, comments, and suggestions using access delegated from the signed-in user.",
     "developerName": "Sosein",
     "category": "Productivity",
     "capabilities": [
@@ -32,6 +33,7 @@
     ],
     "websiteURL": "https://sosein.ai",
     "defaultPrompt": [
+      "Recall recent Sosein discussions",
       "Search my Sosein artifacts",
       "Read a Sosein artifact",
       "Create a Sosein note"

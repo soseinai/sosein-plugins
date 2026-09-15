@@ -1,7 +1,7 @@
 {
   "name": "sosein",
-  "version": "0.1.13",
-  "description": "Collaborate with Sosein's production artifacts through the Sosein MCP server.",
+  "version": "0.1.14",
+  "description": "Recall memories and collaborate with Sosein's production artifacts through the Sosein MCP server.",
   "author": {
     "name": "Sosein",
     "url": "https://sosein.ai"
@@ -14,6 +14,7 @@
     "documents",
     "artifacts",
     "notes",
+    "memory",
     "collaboration",
     "mcp",
     "oauth"

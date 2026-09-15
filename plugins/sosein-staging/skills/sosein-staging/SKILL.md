@@ -1,6 +1,6 @@
 ---
 name: sosein-staging
-description: Use when the user explicitly wants to search, read, compare, find in, outline, create, edit, or review Sosein's staging or non-production artifacts, structured objects, or annotation threads through the Sosein Staging MCP plugin.
+description: Use when the user explicitly wants to recall Sosein's staging memories or search, read, compare, find in, outline, create, edit, or review Sosein's staging or non-production artifacts, structured objects, or annotation threads through the Sosein Staging MCP plugin.
 ---
 
 # Sosein Staging
@@ -32,6 +32,8 @@ or re-authorize the plugin; never request bearer tokens.
 ## Tool Routing
 
 - `sosein_profile`: inspect delegated identity, scopes, accounts, and workspaces.
+- `sosein_recall`: reconstruct relevant memories and inspected source evidence
+  for questions about past events, discussions, and decisions. See Recall Memory.
 - `sosein_list_workspaces`: list creation destinations in the current MCP
   account. This tool takes no arguments.
 - `sosein_search_artifacts`: discover artifacts by query, type, time, or
@@ -64,6 +66,29 @@ or re-authorize the plugin; never request bearer tokens.
   `sosein_create_suggestion`: create a review, comment, or proposed edit.
 - `sosein_reply_to_annotation`, `sosein_resolve_annotation`, and
   `sosein_reject_suggestion`: reply, resolve/reopen, or reject when requested.
+
+## Recall Memory
+
+Use `sosein_recall` when the user asks what happened, what was discussed or
+decided, or what Sosein remembers, including recent PR discussions. Use artifact
+search/read for locating a specific artifact or inspecting its current content.
+
+Pass a focused natural-language `request` and optional `context` that helps
+interpret it. Include a known repository, topic, or time range when relevant.
+`effort_hint` is optional (`low`, `medium`, `high`, or `extra-high`); omitting it
+uses `medium`. Recall uses the connected MCP account and takes neither
+`account_id` nor `request_id`.
+
+The response contains a Markdown `recollection` and typed `citations`. Preserve
+its evidence and uncertainty. Do not invent source links or treat an empty
+recollection as proof that no relevant events occurred. A tool error means
+recall failed, not that memory is empty.
+
+Recall requires all three delegated scopes: `memories:read`, `documents:read`,
+and `documents:search`. If it is missing, inspect `sosein_profile` when available.
+If a required scope is absent, ask the user to reconnect or re-authorize the
+plugin. If all scopes are present, report that the connected server did not
+advertise recall; updating these instructions alone cannot expose a tool.
 
 ## Read and Edit Blocks
 
