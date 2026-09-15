@@ -4,8 +4,9 @@ Official plugins for connecting Codex and Claude Code to Sosein production and
 staging environments.
 
 The `sosein` plugin connects agents to the production Sosein MCP server. It
-supports OAuth sign-in and lets an agent search, read, create, and edit Sosein's
-artifacts using the signed-in user's existing Sosein permissions.
+supports OAuth sign-in and lets an agent recall memories and search, read,
+create, and edit Sosein's artifacts using the signed-in user's existing Sosein
+permissions.
 
 ## Install in Codex
 
@@ -60,6 +61,7 @@ claude plugin update sosein@sosein
 The plugin can:
 
 - inspect the delegated profile, account context, and workspace destinations;
+- recall prior events, discussions, and decisions with citations;
 - search documents, notes, records, and events;
 - read artifacts, selected blocks, and structured objects;
 - create documents, notes, or records privately or in a workspace, from native
@@ -76,15 +78,18 @@ surface and editing contract.
 
 ## Maintaining MCP Alignment
 
-The plugin guidance is aligned with the 26-tool catalog in Sosein Cloud commit
-`82fb2e66c` (2026-09-02), including the format-v5 block surface. This is a
-source-contract baseline, not a claim that both hosted environments have
-deployed that revision. The connected server's tool schemas and delegated
-scopes determine what is available.
+The artifact guidance uses the format-v5 block surface from Sosein Cloud commit
+`82fb2e66c` (2026-09-02). Recall guidance was checked against commit `40c3c082c`
+(2026-09-15). These are source-contract baselines, not claims that both hosted
+environments have deployed those revisions. The connected server's tool schemas
+and delegated scopes determine what is available. Recall requires
+`memories:read`, `documents:read`, and `documents:search`; reconnect or re-authorize
+an older grant if one of those scopes is missing.
 
-When the server changes, compare its `src/mcp/mod.rs` tool definitions and
-`src/mcp/tools/reviews/mod.rs` definitions in the Cloud server crate with both
-plugins' skills and README tables. Keep the two workflows identical except for
+When the server changes, compare the Harness catalog in
+`strands/harness/crates/sosein-harness-core/src/catalog/{mod,definitions}.rs`
+with both plugins' skills and README tables. Cloud's MCP endpoint delegates tool
+discovery to Harness. Keep the two workflows identical except for
 environment routing. Update both Codex and Claude package versions together.
 
 ## Repository contents

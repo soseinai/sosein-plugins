@@ -13,13 +13,14 @@ connect or re-authorize the plugin; do not supply bearer tokens to the agent.
 
 ## Agent Surface
 
-The current server catalog contains 26 tools. OAuth scopes and delegated
+Tools are discovered from the connected MCP server. OAuth scopes and delegated
 permissions determine which tools the connected agent can use. The connected
 tool schemas are authoritative for exact arguments.
 
 | Need | Tool |
 | --- | --- |
 | Inspect identity, account, and delegated scopes | `sosein_profile` |
+| Recall prior events, discussions, and decisions | `sosein_recall` |
 | Find workspaces where the user can create artifacts | `sosein_list_workspaces` |
 | Search documents, notes, records, and events | `sosein_search_artifacts` |
 | Read one artifact or a batch of 1–10 | `sosein_read_artifact`, `sosein_read_artifacts` |
@@ -37,6 +38,21 @@ tool schemas are authoritative for exact arguments.
 Search requires an `account_id`; get it from `sosein_profile` when unknown.
 Search results are discovery metadata, not proof of current content or access.
 Read the artifact or object before using its content.
+
+## Recall Memory
+
+Use `sosein_recall` for questions about prior events, discussions, and decisions,
+such as recent PR discussions. It accepts a natural-language `request`, optional
+`context`, and optional `effort_hint` (`low`, `medium`, `high`, or `extra-high`;
+default `medium`). It uses the connected MCP account, so do not pass `account_id`
+or a mutation `request_id`. The result is a Markdown `recollection` with typed
+`citations`; preserve the evidence and uncertainty when answering.
+
+Recall requires `memories:read`, `documents:read`, and `documents:search`.
+An older OAuth grant may need re-authorization before the server advertises the
+tool. The plugin does not define a static tool allowlist. Updating the package
+adds guidance; the deployed server and delegated scopes control availability.
+Use artifact search/read when you need a specific artifact's current content.
 
 ## Creation and Placement
 
