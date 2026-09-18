@@ -16,7 +16,7 @@ or re-authorize the plugin; never request bearer tokens.
 ## Core Rules
 
 - Initialize conversation context as described below. Keep all calls in the
-  account returned by `sosein_profile`.
+  account selected from `sosein_profile.delegated_access.accounts[].id`.
 - Use the connected tool schemas for exact arguments and supported operations.
   If the connected server lacks a tool, report the limit; do not invent a call.
 - Prefer the narrowest tool and smallest read that completes the task. Search
@@ -32,7 +32,8 @@ or re-authorize the plugin; never request bearer tokens.
 
 At the first substantive Sosein task in an external conversation, call
 `sosein_profile` unless its result is already available in that conversation.
-Keep calls in its `account_id`.
+Get `account_id` from the relevant `delegated_access.accounts[].id` entry.
+Keep calls in that account; the profile has no top-level `account_id`.
 
 Use `delegated_access.delegated_from_member_id` as the human owner's member ID,
 not `actor_member_id`. Use the names, IDs, and kinds in
