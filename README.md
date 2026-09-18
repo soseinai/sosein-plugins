@@ -61,6 +61,7 @@ claude plugin update sosein@sosein
 The plugin can:
 
 - inspect the delegated profile, account context, and workspace destinations;
+- read maintained narrative context for the org, human owner, and relevant workspace;
 - recall prior events, discussions, and decisions with citations;
 - search documents, notes, records, and events;
 - read artifacts, selected blocks, and structured objects;
@@ -84,7 +85,14 @@ The artifact guidance uses the format-v5 block surface from Sosein Cloud commit
 environments have deployed those revisions. The connected server's tool schemas
 and delegated scopes determine what is available. Recall requires
 `memories:read`, `documents:read`, and `documents:search`; reconnect or re-authorize
-an older grant if one of those scopes is missing.
+an older grant if one of those scopes is missing. Narrative reads require
+`memories:read` and delegated sphere access; account and caller authority come
+from the connected host. Use `delegated_access.accounts[].id` from the profile
+when an artifact tool needs `account_id`, not a top-level profile field.
+Missing narratives are coverage gaps; dependency failures remain failures.
+Retain gaps and failures with the conversation context without claiming
+complete coverage or widening scope. See each plugin skill for the fixed
+conversation context rules.
 
 When the server changes, compare the Harness catalog in
 `strands/harness/crates/sosein-harness-core/src/catalog/{mod,definitions}.rs`

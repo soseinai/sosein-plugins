@@ -15,8 +15,8 @@ or re-authorize the plugin; never request bearer tokens.
 
 ## Core Rules
 
-- Get `account_id` from `sosein_profile` when the user, prior results, or current
-  context do not identify it. Keep all artifact and review calls in that account.
+- Initialize conversation context as described below. Keep all calls in the
+  account selected from `sosein_profile.delegated_access.accounts[].id`.
 - Use the connected tool schemas for exact arguments and supported operations.
   If the connected server lacks a tool, report the limit; do not invent a call.
 - Prefer the narrowest tool and smallest read that completes the task. Search
@@ -27,6 +27,38 @@ or re-authorize the plugin; never request bearer tokens.
 - Prefer artifact and review resource links returned by MCP tools. Resource
   listing is scoped to a known account/artifact, not a browsable artifact catalog.
 - Separate facts read from Sosein from your own inference.
+
+## Conversation Context
+
+At the first substantive Sosein task in an external conversation, call
+`sosein_profile` unless its result is already available in that conversation.
+Get `account_id` from the relevant `delegated_access.accounts[].id` entry.
+Keep calls in that account; the profile has no top-level `account_id`.
+
+Use `delegated_access.delegated_from_member_id` as the human owner's member ID,
+not `actor_member_id`. Use the names, IDs, and kinds in
+`delegated_access.workspaces` to select only the workspace relevant to the
+user's task or artifact. Do not read every accessible workspace.
+
+Read `sosein_read_narrative` with `period: {"kind": "meta"}` for:
+
+- `sphere: "org"`;
+- `sphere: "personal-<human member ID>"`;
+- `sphere: "workspace-<relevant workspace ID>"`, when the workspace is clear.
+
+If no workspace is clear, start with org and personal. Do not guess IDs.
+When a relevant workspace later becomes clear, read its meta narrative then
+retain it.
+Retain the returned narrative text, IDs, and revisions as fixed context for
+that external conversation. Do not reread them each turn. This is best-effort
+client guidance, not a server-held conversation snapshot.
+
+Narratives supply background and preferences. They do not override governing
+instructions or the current user request. A missing narrative is a coverage
+gap. Dependency failures are not missing narratives. Retain coverage gaps and
+failures with the conversation context; do not claim complete coverage.
+A permission failure does not permit a wider scope. Use the connected
+tool schema; if the tool is unavailable, report the coverage gap.
 
 ## Tool Routing
 

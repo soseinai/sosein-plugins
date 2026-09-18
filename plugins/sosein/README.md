@@ -20,6 +20,7 @@ tool schemas are authoritative for exact arguments.
 | Need | Tool |
 | --- | --- |
 | Inspect identity, account, and delegated scopes | `sosein_profile` |
+| Read maintained narrative context for a sphere and period | `sosein_read_narrative` |
 | Recall prior events, discussions, and decisions | `sosein_recall` |
 | Find workspaces where the user can create artifacts | `sosein_list_workspaces` |
 | Search documents, notes, records, and events | `sosein_search_artifacts` |
@@ -35,9 +36,29 @@ tool schemas are authoritative for exact arguments.
 | Create a review, comment, or proposed edit | `sosein_create_review`, `sosein_create_comment`, `sosein_create_suggestion` |
 | Reply, resolve/reopen, or reject a suggestion | `sosein_reply_to_annotation`, `sosein_resolve_annotation`, `sosein_reject_suggestion` |
 
-Search requires an `account_id`; get it from `sosein_profile` when unknown.
+Search requires an `account_id`; select the relevant
+`sosein_profile.delegated_access.accounts[].id` entry. The profile has no
+top-level `account_id`.
 Search results are discovery metadata, not proof of current content or access.
 Read the artifact or object before using its content.
+
+## Narrative Context
+
+At the first substantive Sosein task in a conversation, use the profile to
+select the human owner and relevant workspace, then read their meta narratives
+and the org meta narrative. Follow the skill's Conversation Context rules.
+`sosein_read_narrative` takes `sphere` and `period`; account and caller authority
+come from the connected MCP host. Do not pass `account_id` or a mutation
+`request_id`.
+
+Narrative reads require `memories:read` and delegated access to the selected
+sphere. An older grant may need re-authorization before the tool is available.
+A `missing` result is a coverage gap, not evidence that nothing happened.
+Dependency failures are not missing narratives. Retain gaps and failures with
+the conversation context; do not claim complete coverage or widen scope after
+a permission failure. Retain returned narrative text, IDs, and revisions for
+the conversation; do not reread each turn. If a relevant workspace later becomes
+clear, read its meta narrative then retain it.
 
 ## Recall Memory
 
