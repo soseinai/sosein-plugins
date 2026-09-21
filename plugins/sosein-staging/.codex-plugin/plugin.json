@@ -1,6 +1,6 @@
 {
   "name": "sosein-staging",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "description": "Recall memories and collaborate with Sosein's staging artifacts from Codex through the staging Sosein MCP server.",
   "author": {
     "name": "Sosein",
@@ -23,7 +23,7 @@
   "interface": {
     "displayName": "Sosein Staging",
     "shortDescription": "Recall memories and collaborate in Sosein Staging",
-    "longDescription": "Connect Codex to Sosein Staging through OAuth-backed MCP. Recall relevant memories with citations, search and read artifacts, create documents, notes, or records privately or in a workspace, work with structured objects, make block-checked edits, and collaborate through reviews, comments, and suggestions using access delegated from the signed-in user.",
+    "longDescription": "Connect Codex to Sosein Staging through OAuth-backed MCP. Recall relevant memories with citations, search and read exact blocks or complete sections, observe artifact changes, create documents, notes, or records privately or in a workspace, edit text, blocks, and objects, append to sections, and collaborate through reviews using access delegated from the signed-in user.",
     "developerName": "Sosein",
     "category": "Productivity",
     "capabilities": [

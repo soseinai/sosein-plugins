@@ -9,12 +9,12 @@
     {
       "name": "sosein",
       "source": "./plugins/sosein",
-      "description": "Collaborate with Sosein's production artifacts through the Sosein MCP server."
+      "description": "Recall memories and collaborate with Sosein's production artifacts through the Sosein MCP server."
     },
     {
       "name": "sosein-staging",
       "source": "./plugins/sosein-staging",
-      "description": "Collaborate with Sosein's staging artifacts through the staging Sosein MCP server."
+      "description": "Recall memories and collaborate with Sosein's staging artifacts through the staging Sosein MCP server."
     }
   ]
 }

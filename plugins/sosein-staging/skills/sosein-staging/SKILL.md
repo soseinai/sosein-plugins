@@ -1,6 +1,6 @@
 ---
 name: sosein-staging
-description: Use when the user explicitly wants to recall Sosein's staging memories or search, read, compare, find in, outline, create, edit, or review Sosein's staging or non-production artifacts, structured objects, or annotation threads through the Sosein Staging MCP plugin.
+description: Use when the user explicitly wants to recall Sosein's staging memories or search, read, compare, find in, outline, inspect changes to, create, edit, or review Sosein's staging or non-production artifacts, structured objects, or annotation threads through the Sosein Staging MCP plugin.
 ---
 
 # Sosein Staging
@@ -41,14 +41,14 @@ not `actor_member_id`. Use the names, IDs, and kinds in
 `delegated_access.workspaces` to select only the workspace relevant to the
 user's task or artifact. Do not read every accessible workspace.
 
-Read `sosein_read_narrative` with `period: {"kind": "meta"}` for:
+Read `sosein_read_narrative` with `period: {"kind": "overview"}` for:
 
 - `sphere: "org"`;
 - `sphere: "personal-<human member ID>"`;
 - `sphere: "workspace-<relevant workspace ID>"`, when the workspace is clear.
 
 If no workspace is clear, start with org and personal. Do not guess IDs.
-When a relevant workspace later becomes clear, read its meta narrative then
+When a relevant workspace later becomes clear, read its overview narrative then
 retain it.
 Retain the returned narrative text, IDs, and revisions as fixed context for
 that external conversation. Do not reread them each turn. This is best-effort
@@ -72,14 +72,20 @@ tool schema; if the tool is unavailable, report the coverage gap.
   workspace. Keep `verbosity: "compact"` unless detailed search evidence is
   needed. Types include `document`, `note`, `record`, and `event`.
 - `sosein_read_artifact`: read `head.addressed_projection` for one artifact.
-  Use a `b:` block or `o:` object `scope` for a subtree.
+  A heading `b:` scope expands its section; another block scope reads that
+  block exactly, and an `o:` scope reads the block carrying that object.
 - `sosein_read_artifacts`: read 1–10 known artifacts from one account in one
   call. Handle per-item errors; use scoped reads for large artifacts.
 - `sosein_find_in_artifact`: locate literal text or regex matches.
 - `sosein_outline_document`: get the block map, not just headings. Each row
-  includes a block id, kind, preview, and fused `b:id:hash` token.
-- `sosein_read_blocks`: fetch 1–50 block ids or fused tokens from the map.
-  A heading id returns its whole section.
+  includes a block id, kind, preview, and fused `b:id:hash` token. Heading rows
+  also estimate the block count and addressed-Markdown bytes in their section.
+- `sosein_read_blocks`: fetch exactly 1–50 block ids or fused tokens from the
+  map. A heading id returns only the heading block.
+- `sosein_read_sections`: expand 1–50 heading ids through their nested content,
+  stopping before the next heading of equal or higher level.
+- `sosein_get_artifact_changes`: read bounded net changes after an observed
+  content sequence, optionally waiting for a later sequence.
 - `sosein_outline_artifact_objects`: locate object references; use
   `sosein_read_object` for their full data, `n:` node ids, values, and hashes.
 - `sosein_list_object_types` then `sosein_get_object_schema`: discover
@@ -88,9 +94,15 @@ tool schema; if the tool is unavailable, report the coverage gap.
 - `sosein_create_from_markdown`: create from inline source Markdown, including
   Mermaid diagrams. See Math and Diagrams below.
 - `sosein_create_object`: create and place a schema-valid object atomically.
-- `sosein_edit_artifact`: edit prose with exact `old`/`new` fragments.
-- `sosein_edit_blocks`: insert, replace, move, remove, or set block attributes.
+- `sosein_edit_artifact`: change matching text within a block with exact
+  `old`/`new` fragments.
+- `sosein_edit_blocks`: insert or rewrite whole blocks, move or remove them, or
+  set block attributes.
+- `sosein_append_to_section`: append Markdown after a heading's complete
+  current section.
 - `sosein_edit_object`: edit object data with node-level operations.
+- `sosein_get_mutation_status`: look up a completed durable receipt for a
+  known artifact and mutation request id.
 - `sosein_list_reviews` and `sosein_get_review`: discover reviews and read
   annotation threads. Follow `next_cursor`; keep an `annotation_id` filter
   unchanged while paging that thread.
@@ -131,15 +143,19 @@ reads do not open artifact sessions.
 
 1. Search only when the artifact id or URI is unknown. Search freshness describes
    the index, not whether the artifact is currently readable.
-2. For a large artifact, find or outline first, then read the relevant blocks.
-   Outline tokens are valid edit preconditions; previews can be truncated.
-3. For prose edits, copy exact text from the read into
+2. For a large artifact, find or outline first. Use `sosein_read_blocks` for
+   exact blocks and `sosein_read_sections` only when the complete heading
+   sections are needed. Outline tokens are valid edit preconditions; previews
+   and section size estimates are bounded hints at the outline revision.
+3. For matching-text edits within a block, copy exact text from the read into
    `sosein_edit_artifact.fragments`. Each `old` must match uniquely, optionally
    within a bare `b:` or `o:` `scope`. `new: ""` deletes the matched text;
    `old: ""` is only for a structurally empty document.
-4. For structural edits, use `sosein_edit_blocks.ops`:
+4. For whole-block insertion, rewriting, movement, removal, or attributes, use
+   `sosein_edit_blocks.ops`:
 
-   - `insert_blocks` inserts Markdown after `after`; omit `after` for the start.
+   - `insert_blocks` inserts Markdown after `after_block`; omit `after_block`
+     for the document start. `move_block` uses the same `after_block` field.
    - `replace_content` replaces exactly one block; `remove_block` removes one.
      Both require the current fused token in `block`.
    - `move_block` changes position; `set_attrs` changes paragraph attributes
@@ -150,17 +166,63 @@ reads do not open artifact sessions.
    - Prefer per-block checks. Set `expected_head_sequence` only when the
      operation depends on the whole document remaining unchanged.
 
+   - Use `sosein_append_to_section` with `heading_id` and `markdown` when the
+     position is the end of a complete section, including nested subsections.
+     Use `sosein_edit_blocks` for block-relative placement.
+
 5. Both edit tools accept at most 50 fragments/ops and apply each batch
    atomically. Use `dry_run: true` for complex or risky changes. Inspect the
    preview, then commit with a fresh request id and retain it for exact retries.
    A preview does not reserve the blocks; the commit can still refuse.
-6. Re-read after commit when confirmation or later reasoning needs final content.
+6. Use receipt tokens for the next block-addressed call. Read again only when
+   later reasoning needs current content, not merely to confirm a receipt.
 
 Do not send `projection_version` or `artifact_session_id` to these block/text
 edit tools. Strip address-comment lines from Markdown write payloads. Do not
 use unified diffs or whole-artifact replacement. Preserve existing object
 references when editing surrounding prose; create new objects with
 `sosein_create_object`, not by inventing or copying reference text.
+
+## Mutation Results and Recovery
+
+`sosein_edit_blocks`, `sosein_edit_artifact`, `sosein_append_to_section`,
+`sosein_create_object`, and `sosein_edit_object` return compact mutation
+results. A durable receipt identifies the original `committed_sequence`,
+`outcome` (`committed` or `unchanged`), replay state, and affected blocks with
+tokens from that receipt revision. The stored receipt is capped at 16 KiB while
+retaining its identity and outcome. If `omissions` is present, read the relevant
+current blocks or objects only when the missing handles are needed; omitted
+detail is not paged and status lookup returns the same capped snapshot.
+
+`include_outline` defaults to false. Set it to true only when a supplementary
+outline is useful. Its sequence can be newer than the commit, and an outline
+warning does not undo a confirmed write.
+A dry run returns a validation preview and creates no durable receipt. Inspect
+`result_kind` instead of assuming that every successful response is a commit.
+
+Use `sosein_get_mutation_status` only with the caller-generated UUIDv7 used for
+the original supported mutation and the same artifact. `status: "unknown"`
+can mean absent, pending, expired, or a request without a durable receipt; it
+does not prove that no write occurred or make a new request id safe. Retry an
+identical uncertain mutation with its original request id. If its payload must
+change, first establish the current artifact state, then use a new UUIDv7.
+
+## Observe Artifact Changes
+
+After an authoritative read, pass its content sequence as the exclusive
+`after_sequence` to `sosein_get_artifact_changes`. The result is a bounded net
+change summary, not an audit log or participant feed. It contains block and
+native-object changes and may contain a title change; it does not attribute
+actors. Block previews are bounded, so use an exact block, section, or object
+read when the current full content is needed.
+
+`wait_ms` defaults to zero and is capped at 20,000. For
+`result_kind: "artifact_changes"`, use `through_sequence` as the next cursor,
+even when no changes are returned. For
+`artifact_changes_resync_required`, do not advance the old cursor. Follow
+`fresh_read_instruction`, take the cursor from that fresh authoritative view,
+and then resume. Resync reasons are `too_many_changes` and
+`history_unavailable`.
 
 ## Artifact Creation
 
@@ -255,6 +317,9 @@ use `edit` only when the requested audience calls for it.
 
 ## Recovery
 
+- When a refusal supplies `op_index` or `fragment_index` and a diagnostic
+  rule/code, fix that named edit directly instead of probing with broader
+  payload changes.
 - On `block_hash_mismatch`, use the refusal's current block content when it is
   sufficient; otherwise read the block again. Rebuild the edit and use a fresh id.
 - On a missing block, use returned nearby ids or refresh the block map.
