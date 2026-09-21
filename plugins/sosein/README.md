@@ -26,12 +26,14 @@ tool schemas are authoritative for exact arguments.
 | Search documents, notes, records, and events | `sosein_search_artifacts` |
 | Read one artifact or a batch of 1–10 | `sosein_read_artifact`, `sosein_read_artifacts` |
 | Find text or inspect the block map | `sosein_find_in_artifact`, `sosein_outline_document` |
-| Read selected blocks or sections | `sosein_read_blocks` |
+| Read exact blocks or complete heading sections | `sosein_read_blocks`, `sosein_read_sections` |
+| Observe net changes after a content sequence | `sosein_get_artifact_changes` |
 | Locate and read structured objects | `sosein_outline_artifact_objects`, `sosein_read_object` |
 | Discover object types and field schemas | `sosein_list_object_types`, `sosein_get_object_schema` |
 | Create from native agent Markdown or source Markdown | `sosein_create_artifact`, `sosein_create_from_markdown` |
 | Create and place a structured object | `sosein_create_object` |
-| Edit prose, block structure, or object fields | `sosein_edit_artifact`, `sosein_edit_blocks`, `sosein_edit_object` |
+| Edit text, whole blocks, or object fields, or append to a section | `sosein_edit_artifact`, `sosein_edit_blocks`, `sosein_append_to_section`, `sosein_edit_object` |
+| Recover a completed mutation receipt | `sosein_get_mutation_status` |
 | Find and read reviews and annotation threads | `sosein_list_reviews`, `sosein_get_review` |
 | Create a review, comment, or proposed edit | `sosein_create_review`, `sosein_create_comment`, `sosein_create_suggestion` |
 | Reply, resolve/reopen, or reject a suggestion | `sosein_reply_to_annotation`, `sosein_resolve_annotation`, `sosein_reject_suggestion` |
@@ -45,8 +47,8 @@ Read the artifact or object before using its content.
 ## Narrative Context
 
 At the first substantive Sosein task in a conversation, use the profile to
-select the human owner and relevant workspace, then read their meta narratives
-and the org meta narrative. Follow the skill's Conversation Context rules.
+select the human owner and relevant workspace, then read their overview
+narratives and the org overview narrative. Follow the skill's Conversation Context rules.
 `sosein_read_narrative` takes `sphere` and `period`; account and caller authority
 come from the connected MCP host. Do not pass `account_id` or a mutation
 `request_id`.
@@ -58,7 +60,7 @@ Dependency failures are not missing narratives. Retain gaps and failures with
 the conversation context; do not claim complete coverage or widen scope after
 a permission failure. Retain returned narrative text, IDs, and revisions for
 the conversation; do not reread each turn. If a relevant workspace later becomes
-clear, read its meta narrative then retain it.
+clear, read its overview narrative then retain it.
 
 ## Recall Memory
 
@@ -96,14 +98,22 @@ a visible label and must match the object's block or inline class.
 The current format-v5 read surface returns `head.addressed_projection`:
 Markdown with `<!-- b:id:hash -->` lines. A fused `b:id:hash` token identifies
 one block and checks that its content has not changed. The block map returned
-by `sosein_outline_document` contains these tokens; `sosein_read_blocks`
-fetches selected blocks, or a whole section when given a heading id.
+by `sosein_outline_document` contains these tokens. `sosein_read_blocks`
+fetches exactly the named blocks, including only the heading block for a heading
+id. `sosein_read_sections` expands heading ids through nested content until the
+next heading of equal or higher level. Heading outline rows include estimated
+section block and byte counts to help bound the read. The existing
+`sosein_read_artifact(scope)` behavior still expands a heading scope.
 
 Use `sosein_edit_artifact` for exact `old`/`new` fragments, optionally scoped
 to a bare `b:` or `o:` id. Use `sosein_edit_blocks` for block insertion,
 replacement, attributes, moves, and removal. Replacement and removal require
 the fused token. Both paths apply an atomic batch of at most 50 fragments/ops.
 They do not take `projection_version` or `artifact_session_id`.
+
+Block insertion and movement use `after_block`; omit it for document start.
+Use `sosein_append_to_section` with `heading_id` and `markdown` to append after
+the section's nested content.
 
 Strip address comments from Markdown write payloads. Do not use unified diffs
 or whole-artifact replacement. Read object data with `sosein_read_object` and
@@ -114,6 +124,24 @@ Each write requires a caller-stable UUIDv7 `request_id`. Reuse it only for an
 exact retry. Use `dry_run` to preview complex text/block changes, then commit
 with a fresh request id. If a block or anchor changed, use the typed refusal's
 current content or read again, rebuild the write, and use a new request id.
+
+The block/text, section-append, object-create, and object-edit tools return
+compact mutation results. A durable receipt preserves the original outcome,
+committed sequence, replay state, and affected block tokens from that receipt
+revision. The stored receipt is capped at 16 KiB; `omissions` counts removed whole
+entries, which are not paged. `include_outline` defaults to false; a requested
+outline is supplementary current state and can be newer than the receipt. Dry
+runs have no durable receipt. `sosein_get_mutation_status` returns
+the same stored receipt when available; `unknown` does not prove no write
+occurred, so retry an identical uncertain request only with its original UUIDv7.
+
+`sosein_get_artifact_changes` returns bounded net changes after an exclusive
+`after_sequence`; it is not an audit or presence feed and has no actor
+attribution. Its block previews are not full content; read the exact block or
+section when needed. `wait_ms` defaults to zero and is capped at 20,000. Advance to
+`through_sequence` for every `artifact_changes` result, including an unchanged
+one. A resync-required result has no new cursor: follow its fresh-read
+instruction and resume from the fresh view.
 
 ## Reviews
 

@@ -64,10 +64,11 @@ The plugin can:
 - read maintained narrative context for the org, human owner, and relevant workspace;
 - recall prior events, discussions, and decisions with citations;
 - search documents, notes, records, and events;
-- read artifacts, selected blocks, and structured objects;
+- read artifacts, exact blocks, complete heading sections, and structured objects;
+- observe bounded net changes after an artifact content sequence;
 - create documents, notes, or records privately or in a workspace, from native
   agent Markdown or source Markdown;
-- edit text, block structure, and object fields with current-content checks; and
+- edit text, block structure, and object fields, and append to sections with current-content checks; and
 - read and create reviews, comments, and suggestions.
 
 Each MCP identity is delegated from the signed-in human user in its respective
@@ -79,10 +80,10 @@ surface and editing contract.
 
 ## Maintaining MCP Alignment
 
-The artifact guidance uses the format-v5 block surface from Sosein Cloud commit
-`82fb2e66c` (2026-09-02). Recall guidance was checked against commit `40c3c082c`
-(2026-09-15). These are source-contract baselines, not claims that both hosted
-environments have deployed those revisions. The connected server's tool schemas
+The artifact and narrative guidance uses the merged Sosein Cloud contract at
+commit `46f17c29603817dac7f146600b26be8721ab4939` (2026-09-21 UTC). This is a
+source-contract baseline, not a claim that both hosted environments have
+deployed that revision. The connected server's tool schemas
 and delegated scopes determine what is available. Recall requires
 `memories:read`, `documents:read`, and `documents:search`; reconnect or re-authorize
 an older grant if one of those scopes is missing. Narrative reads require
