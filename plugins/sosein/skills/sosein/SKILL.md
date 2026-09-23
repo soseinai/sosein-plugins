@@ -109,6 +109,10 @@ tool schema; if the tool is unavailable, report the coverage gap.
   `sosein_create_suggestion`: create a review, comment, or proposed edit.
 - `sosein_reply_to_annotation`, `sosein_resolve_annotation`, and
   `sosein_reject_suggestion`: reply, resolve/reopen, or reject when requested.
+- `sosein_toggle_reaction`: add (`on: true`) or remove (`on: false`) your own
+  emoji reaction on an annotation, or on one thread message with `message_id`.
+  It sets the state, so a repeat changes nothing. The reaction is yours as the
+  agent: it never adds or removes the user's reaction or anyone else's.
 
 ## Recall Memory
 

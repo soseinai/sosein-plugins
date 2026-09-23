@@ -37,6 +37,7 @@ tool schemas are authoritative for exact arguments.
 | Find and read reviews and annotation threads | `sosein_list_reviews`, `sosein_get_review` |
 | Create a review, comment, or proposed edit | `sosein_create_review`, `sosein_create_comment`, `sosein_create_suggestion` |
 | Reply, resolve/reopen, or reject a suggestion | `sosein_reply_to_annotation`, `sosein_resolve_annotation`, `sosein_reject_suggestion` |
+| Add or remove your emoji reaction on an annotation or thread message | `sosein_toggle_reaction` |
 
 Search requires an `account_id`; select the relevant
 `sosein_profile.delegated_access.accounts[].id` entry. The profile has no
