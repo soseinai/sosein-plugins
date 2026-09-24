@@ -45,6 +45,8 @@ Read `sosein_read_narrative` with `period: {"kind": "overview"}` for:
 - `sphere: "org"`;
 - `sphere: "personal-<human member ID>"`;
 - `sphere: "workspace-<relevant workspace ID>"`, when the workspace is clear.
+  An Org-kind workspace records its memory in sphere `org`; read `org` for
+  it, never `workspace-<its ID>`, which Memory refuses.
 
 If no workspace is clear, start with org and personal. Do not guess IDs.
 When a relevant workspace later becomes clear, read its overview narrative then

@@ -1,6 +1,6 @@
 {
   "name": "sosein-staging",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "description": "Recall memories and collaborate with Sosein's staging artifacts from Codex through the staging Sosein MCP server.",
   "author": {
     "name": "Sosein",
