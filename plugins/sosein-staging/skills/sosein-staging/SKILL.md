@@ -116,6 +116,14 @@ tool schema; if the tool is unavailable, report the coverage gap.
   emoji reaction on an annotation, or on one thread message with `message_id`.
   It sets the state, so a repeat changes nothing. The reaction is yours as the
   agent: it never adds or removes the user's reaction or anyone else's.
+- `sosein_create_poll`: ask a question with 2 to 10 answer options. It takes the
+  same target as `sosein_create_comment` (text, whole block, object, or none for
+  the whole artifact). Close or reopen a poll with `sosein_resolve_annotation`.
+- `sosein_set_poll_vote`: set your own vote on a poll with `option_index`, or
+  clear it with `null`. The vote is yours as the agent, never the user's.
+- `sosein_react_inline`: put an emoji reaction on text or an object. It needs a
+  target. To add another emoji to that inline reaction, or to remove yours, use
+  `sosein_toggle_reaction` with its `annotation_id`.
 
 ## Recall Memory
 
@@ -318,6 +326,8 @@ use `edit` only when the requested audience calls for it.
 - There is no accept-suggestion MCP tool. Do not substitute a direct edit for
   acceptance. Resolving/reopening an annotation is not accepting a suggestion.
   Rejection is terminal; use it only when the user requests rejection.
+- A poll answers one question; members and agents each have one vote. Read
+  its options and vote rows with `sosein_get_review` before voting.
 - Inspect `placement` and `target_status` when returned. Missing placement
   metadata does not prove an anchor is orphaned.
 
