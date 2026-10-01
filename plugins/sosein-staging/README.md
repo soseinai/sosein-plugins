@@ -27,6 +27,7 @@ tool schemas are authoritative for exact arguments.
 | Read one artifact or a batch of 1–10 | `sosein_read_artifact`, `sosein_read_artifacts` |
 | Find text or inspect the block map | `sosein_find_in_artifact`, `sosein_outline_document` |
 | Read exact blocks or complete heading sections | `sosein_read_blocks`, `sosein_read_sections` |
+| Open a live document panel in a supporting host | `sosein_open_document_panel` |
 | Observe net changes after a content sequence | `sosein_get_artifact_changes` |
 | Locate and read structured objects | `sosein_outline_artifact_objects`, `sosein_read_object` |
 | Discover object types and field schemas | `sosein_list_object_types`, `sosein_get_object_schema` |
@@ -47,6 +48,21 @@ Search requires an `account_id`; select the relevant
 top-level `account_id`.
 Search results are discovery metadata, not proof of current content or access.
 Read the artifact or object before using its content.
+
+## Document Panel
+
+In a host that supports MCP document panels, ask the agent to open a Sosein
+document. The server advertises `sosein_open_document_panel` when the deployed
+version supports it. Sign in from the panel to edit as yourself. Typing
+autosaves; failures appear as error toasts.
+
+The conversation receives bounded document/selection context and freshness
+hints. This context is not an authoritative read or permission to edit.
+Explicit agent edits still read current content and use normal mutation guards.
+Human edits and delegated agent edits keep separate identities.
+
+CLI and other hosts without panel rendering keep the normal artifact tools.
+Package installation does not deploy server changes or prove panel availability.
 
 ## Narrative Context
 
