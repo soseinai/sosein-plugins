@@ -69,7 +69,9 @@ The plugin can:
 - create documents, notes, or records privately or in a workspace, from native
   agent Markdown or source Markdown;
 - edit text, block structure, and object fields, and append to sections with current-content checks; and
-- read and create reviews, comments, and suggestions.
+- read and create reviews, comments, and suggestions; and
+- open a live document panel in supporting hosts, with separate human sign-in
+  and quiet autosave when the deployed server advertises the panel tool.
 
 Each MCP identity is delegated from the signed-in human user in its respective
 environment. Installing either plugin does not grant access to artifacts the
@@ -77,6 +79,20 @@ user cannot already access in that Sosein environment.
 
 See [`plugins/sosein/README.md`](plugins/sosein/README.md) for the complete agent
 surface and editing contract.
+
+## Marketplace and host support
+
+Production and staging are distributed from this Git-backed marketplace. Each
+plugin bundles its MCP endpoint and prompted OAuth connection; users do not
+need to register a separate ChatGPT connection or configure an MCP URL.
+Installing a package does not grant access beyond the user's Sosein permissions.
+
+The document panel requires a host with MCP UI support and a server deployment
+that advertises the panel tool. CLI and IDE artifact tools remain available
+without rendering the panel. GitHub-imported packages with MCP declarations are
+currently desktop-only in ChatGPT; this release does not establish web or Dot
+distribution. OpenAI directory publication and publisher verification are
+separate from installing this marketplace in Codex.
 
 ## Maintaining MCP Alignment
 

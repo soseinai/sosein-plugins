@@ -62,6 +62,30 @@ failures with the conversation context; do not claim complete coverage.
 A permission failure does not permit a wider scope. Use the connected
 tool schema; if the tool is unavailable, report the coverage gap.
 
+## Document Panel
+
+When the user asks to open a document in a panel, use
+`sosein_open_document_panel` if the connected server advertises it. Resolve the
+artifact from an authorized search/read when its ID is not known. Use the
+connected schema; do not invent a tool when the deployed server lacks it.
+
+The human signs in inside the panel with their own Sosein identity. The agent's
+MCP identity remains delegated from that human. Human typing autosaves; do not
+ask the user to press Save. Normal successful saves need no status message.
+Report a save failure when the panel reports one.
+
+Panel context can identify the document, bounded selection, live-client
+sequence, and pending local edits. It is a hint, not authority, a durable read,
+or a mutation precondition. Confirm its environment and account against the
+connected profile. For an explicit edit request, read the current authorized
+surrounding blocks and use their exact text/tokens. If content changed, reread
+and re-anchor. Opening a panel or selecting text alone does not request an
+edit. Discussion causes no writes; a review request uses comments or
+suggestions. Cleared/unavailable context must not supply a previous selection.
+
+If the host cannot render a panel, continue authorized artifact workflows
+through the normal MCP tools. Do not claim that an unavailable panel opened.
+
 ## Tool Routing
 
 - `sosein_profile`: inspect delegated identity, scopes, accounts, and workspaces.
