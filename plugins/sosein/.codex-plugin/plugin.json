@@ -41,7 +41,9 @@
     ],
     "brandColor": "#111111",
     "composerIcon": "./assets/composer-icon.svg",
-    "logo": "./assets/logo.svg"
+    "composerIconDark": "./assets/composer-icon-dark.svg",
+    "logo": "./assets/logo.svg",
+    "logoDark": "./assets/logo-dark.svg"
   },
   "mcpServers": "./.mcp.json"
 }
