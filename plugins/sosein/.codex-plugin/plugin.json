@@ -1,6 +1,6 @@
 {
   "name": "sosein",
-  "version": "0.1.20",
+  "version": "0.1.21",
   "description": "Recall memories and collaborate with Sosein's production artifacts from Codex through the Sosein MCP server.",
   "author": {
     "name": "Sosein",
@@ -41,7 +41,9 @@
     ],
     "brandColor": "#111111",
     "composerIcon": "./assets/composer-icon.svg",
-    "logo": "./assets/logo.svg"
+    "composerIconDark": "./assets/composer-icon-dark.svg",
+    "logo": "./assets/logo.svg",
+    "logoDark": "./assets/logo-dark.svg"
   },
   "mcpServers": "./.mcp.json"
 }
