@@ -1,6 +1,6 @@
 ---
 name: sosein
-description: Use when the user wants to recall Sosein's production memories or search, read, compare, find in, outline, inspect changes to, create, edit, or review Sosein's production artifacts, structured objects, or annotation threads through the Sosein MCP plugin.
+description: Use when the user wants to recall or store Sosein's production episodic memories or search, read, compare, find in, outline, inspect changes to, create, edit, or review Sosein's production artifacts, structured objects, or annotation threads through the Sosein MCP plugin.
 ---
 
 # Sosein
@@ -12,6 +12,24 @@ non-production data.
 The connection uses OAuth. Access and available tools reflect permissions
 delegated by the signed-in user. If access is missing, ask the user to connect
 or re-authorize the plugin; never request bearer tokens.
+
+## Connection permissions
+
+New connections request the full supported MCP permission set at initial
+OAuth consent: document read/search/write, review read/write, and memory
+read/write. The exact scopes are:
+
+```text
+documents:read documents:search documents:write reviews:read reviews:write memories:read memories:write
+```
+
+These scopes do not bypass the user's account, workspace, artifact, or Memory
+permissions. Existing grants keep their original scopes. If create/edit tools
+are absent, inspect `sosein_profile.scopes` and `granted_tools`; re-authorize
+with the full scope set, then refresh tools and start a new conversation.
+Refreshing tools, refreshing a token, or updating a package does not add OAuth
+permissions. When a host has an OAuth default-scopes setting, use the set above
+before reconnecting. Do not ask the user for bearer tokens.
 
 ## Core Rules
 
@@ -170,6 +188,17 @@ and `documents:search`. If it is missing, inspect `sosein_profile` when availabl
 If a required scope is absent, ask the user to reconnect or re-authorize the
 plugin. If all scopes are present, report that the connected server did not
 advertise recall; updating these instructions alone cannot expose a tool.
+
+## Store Memory
+
+Use `sosein_store_memory` when the user asks to save a finished episodic memory.
+It requires `memories:write` and current write access to the chosen Memory
+sphere. Use the connected schema for `account_id`, caller-stable UUIDv7
+`request_id`, `sphere`, `source_ids`, occurrence times, and `episodic` content.
+Supporting citations describe lineage; they do not grant access and are not
+verified during creation. A returned `status: accepted` and `memory_id` confirm
+durable acceptance. Storage and search indexing complete asynchronously; do
+not claim that acceptance proves the memory is already searchable.
 
 ## Read and Edit Blocks
 

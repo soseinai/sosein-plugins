@@ -56,6 +56,24 @@ claude plugin marketplace update sosein
 claude plugin update sosein@sosein
 ```
 
+## OAuth capabilities
+
+New connections request the full supported MCP permission set at initial
+OAuth consent: document read/search/write, review read/write, and memory
+read/write. The exact scopes are:
+
+```text
+documents:read documents:search documents:write reviews:read reviews:write memories:read memories:write
+```
+
+These scopes do not bypass the user's account, workspace, artifact, or Memory
+permissions. Existing grants keep their original scopes. If create/edit tools
+are absent, inspect `sosein_profile.scopes` and `granted_tools`; re-authorize
+with the full scope set, then refresh tools and start a new conversation.
+Refreshing tools, refreshing a token, or updating a package does not add OAuth
+permissions. When a host has an OAuth default-scopes setting, use the set above
+before reconnecting. Do not ask the user for bearer tokens.
+
 ## Capabilities and access
 
 The plugin can:
@@ -63,6 +81,7 @@ The plugin can:
 - inspect the delegated profile, account context, and workspace destinations;
 - read maintained narrative context for the org, human owner, and relevant workspace;
 - recall prior events, discussions, and decisions with citations;
+- store finished episodic memories in an authorized Memory sphere;
 - search documents, notes, records, and events;
 - read artifacts, exact blocks, complete heading sections, and structured objects;
 - observe bounded net changes after an artifact content sequence;

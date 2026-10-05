@@ -11,6 +11,24 @@ registers as a public client, and completes authorization with PKCE. The MCP
 actor uses access delegated from the signed-in human user. If access is missing,
 connect or re-authorize the plugin; do not supply bearer tokens to the agent.
 
+## OAuth capabilities
+
+New connections request the full supported MCP permission set at initial
+OAuth consent: document read/search/write, review read/write, and memory
+read/write. The exact scopes are:
+
+```text
+documents:read documents:search documents:write reviews:read reviews:write memories:read memories:write
+```
+
+These scopes do not bypass the user's account, workspace, artifact, or Memory
+permissions. Existing grants keep their original scopes. If create/edit tools
+are absent, inspect `sosein_profile.scopes` and `granted_tools`; re-authorize
+with the full scope set, then refresh tools and start a new conversation.
+Refreshing tools, refreshing a token, or updating a package does not add OAuth
+permissions. When a host has an OAuth default-scopes setting, use the set above
+before reconnecting. Do not ask the user for bearer tokens.
+
 ## Agent Surface
 
 Tools are discovered from the connected MCP server. OAuth scopes and delegated
@@ -22,6 +40,7 @@ tool schemas are authoritative for exact arguments.
 | Inspect identity, account, and delegated scopes | `sosein_profile` |
 | Read maintained narrative context for a sphere and period | `sosein_read_narrative` |
 | Recall prior events, discussions, and decisions | `sosein_recall` |
+| Store a finished episodic memory | `sosein_store_memory` |
 | Find workspaces where the user can create artifacts | `sosein_list_workspaces` |
 | Search documents, notes, records, and events | `sosein_search_artifacts` |
 | Read one artifact or a batch of 1–10 | `sosein_read_artifact`, `sosein_read_artifacts` |
