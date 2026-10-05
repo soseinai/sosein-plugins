@@ -1,6 +1,6 @@
 ---
 name: sosein-staging
-description: Use when the user explicitly wants to recall Sosein's staging memories or search, read, compare, find in, outline, inspect changes to, create, edit, or review Sosein's staging or non-production artifacts, structured objects, or annotation threads through the Sosein Staging MCP plugin.
+description: Use when the user explicitly wants to recall or store Sosein's staging episodic memories or search, read, compare, find in, outline, inspect changes to, create, edit, or review Sosein's staging or non-production artifacts, structured objects, or annotation threads through the Sosein Staging MCP plugin.
 ---
 
 # Sosein Staging
