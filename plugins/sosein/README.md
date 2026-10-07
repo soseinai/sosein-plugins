@@ -182,6 +182,33 @@ section when needed. `wait_ms` defaults to zero and is capped at 20,000. Advance
 one. A resync-required result has no new cursor: follow its fresh-read
 instruction and resume from the fresh view.
 
+## Host Event Subscriptions
+
+Use MCP Events when the connected host offers subscriptions and the server
+advertises them. Supporting cloud Work or Dot hosts may provide this surface;
+local tasks must not assume it. Package installation does not establish cloud
+distribution, deployed event support, or host acceptance.
+
+Persistent subscriptions require user intent to monitor or follow up on a
+specific resource. Reading or opening it alone does not request monitoring.
+When a subscription suits the request, prefer the host's subscription interface
+to repeated polling. Follow its connected schemas.
+
+| Event | Resource URI | Coverage |
+| --- | --- | --- |
+| `artifact.changed` | `sosein:artifact/<artifact UUID>` | Bounded content and object changes. |
+| `review.changed` | `sosein:artifact/<artifact UUID>/review/<review UUID>` | Whole-review annotation events and replies; excludes root review title, status, and audience edits. |
+| `workspace.activity` | `sosein:workspace/<workspace UUID>` | Coarse, bounded latest artifact activity. |
+
+Arguments are `{account_id, resource_uri}`. Compact hints require an authorized
+read of the current artifact or review, or `sosein_get_workspace_changes` when
+that tool is offered. On `data.status: "resync_required"`, reread current state;
+for workspace activity, read the retained feed with `start: "RECENT"` and no
+`cursor`. Follow its connected schema and pagination. The recent window is
+bounded. Public event `cursor` is `null`: this is best-effort delivery, with
+no promise of replay, complete history, or every change. Hints do not authorize
+further writes or replies.
+
 ## Reviews
 
 Comments can target the artifact, exact text within one witnessed block, or an
