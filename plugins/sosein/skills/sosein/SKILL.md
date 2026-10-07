@@ -290,6 +290,41 @@ even when no changes are returned. For
 and then resume. Resync reasons are `too_many_changes` and
 `history_unavailable`.
 
+## Host Event Subscriptions
+
+Use MCP Events only when the connected host offers subscriptions and the
+connected server advertises them. A supporting cloud Work or Dot host can
+provide this surface; do not assume it is available in a local task. Installing
+this package does not establish cloud host support or server deployment.
+
+Create a persistent subscription only when the user's request calls for ongoing
+monitoring or follow-up. Keep its account, resource, and purpose within that
+request. Reading, discussing, or opening a resource alone does not authorize
+monitoring. When a subscription suits the request and the host supports it,
+prefer it to repeated polling. Use the host's subscription interface and the
+connected event schemas; do not invent callback configuration or ask for secrets.
+
+Subscriptions use `arguments: {account_id, resource_uri}`, with the account
+selected from the connected profile:
+
+| Event | Canonical resource URI | Coverage |
+| --- | --- | --- |
+| `artifact.changed` | `sosein:artifact/<artifact UUID>` | Bounded artifact content and object changes. |
+| `review.changed` | `sosein:artifact/<artifact UUID>/review/<review UUID>` | Whole-review annotation events and replies. Root review title, status, and audience edits are excluded. |
+| `workspace.activity` | `sosein:workspace/<workspace UUID>` | Coarse, bounded latest artifact activity in that workspace. |
+
+Events are compact hints, not full content or proof of current access. For a
+relevant hint, read the current artifact or whole review with the normal tools.
+For workspace activity, use `sosein_get_workspace_changes` if offered, following
+its connected schema, pagination, and current authorization.
+
+On `data.status: "resync_required"`, reread the current artifact or review. For
+a workspace, read its retained recent feed with `start: "RECENT"` and no
+`cursor`, then read relevant current artifacts as needed. This recovers only
+the retained window. Public event `cursor` is `null`; do not promise replay,
+complete history, or delivery of every change. Feeds and delivery are bounded
+and best effort. A hint alone never authorizes an edit, reply, or other action.
+
 ## Artifact Creation
 
 Both creation tools require `account_id`, title, and UUIDv7 `request_id`.
